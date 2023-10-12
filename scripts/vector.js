@@ -103,7 +103,11 @@ Vector2.prototype.scale = function (number) {
   return this;
 };
 
-/**
+/* - - - - - - - - - -
+  Rotations
+ - - - - - - - - - - */
+
+ /**
  * Returns the angle (in radians) that this vector points towards
  * @returns {number}
  */
@@ -113,9 +117,6 @@ Vector2.prototype.getAngle = function () {
   : Math.PI + Math.atan(this.y/this.x);
 };
 
-/* - - - - - - - - - -
-  Rotations
- - - - - - - - - - - */
  /**
   * Turns this vector into a perpendicular vector by rotating it 90 degrees clockwise, then returns this vector.
   * @returns {Vector2}
@@ -156,7 +157,7 @@ Vector2.prototype.invert = function () {
  * @returns {number}
  */
 Vector2.prototype.magnitude = function () {
-  return Math.sqrt((this.x * this.x) + (this.y * this.y));
+  return Math.sqrt(this.x * this.x + this.y * this.y);
 };
 /**
  * Returns the square of the magnitude (length) of this vector.
@@ -171,7 +172,7 @@ Vector2.prototype.sqMagnitude = function () {
  * @returns {number}
  */
 Vector2.prototype.dotProduct = function (vector) {
-  return ((this.x * vector.x) + (this.y * vector.y));
+  return (this.x * vector.x + this.y * vector.y);
 };
 /**
  * returns the distance between 2 vectors
@@ -203,39 +204,10 @@ Vector2.prototype.normalize = function () {
   return this;
 };
 
-//removed because it is inconsistent with other functions
-/*
- * Returns a copy of this vector with a magnitude of 1.
- * @returns {Vector2}
- */
-/*
-Vector2.prototype.normalized = function () {
-  let magnitude = this.magnitude();
-  if (magnitude != 0) {
-    return new Vector2(this.x / magnitude, this.y / magnitude);
-  }
-  return new Vector2(this.x, this.y);
-}*/
-
-
-//removed because I'm not sure if it's a good practice.
-//Use "new Vector2(0,0)" instead.
-/*Object.defineProperty(Vector2, "zero", {
-  /**
-   * creates a fresh Vector2 with zeros
-   * @returns {Vector2}
-  *
-  get: function () {
-      return new Vector2(0, 0)
-  }
-});*/
-
-
-
 
 
 /* - - - - - - - - - -
-  Vector 3 (beta)
+  Vector 3
  - - - - - - - - - - */
 
 /** creates a Vector3 which is 3 numbers packed together./
@@ -270,7 +242,7 @@ Vector3.prototype.setVector = function (v) {
   return this;
 };
 /**
- * Sets this vector's x and y value, then returns itself.
+ * Sets this vector's x, y and z value, then returns itself.
  * @param {number} x 
  * @param {number} y 
  * @returns {Vector3}
@@ -290,6 +262,31 @@ Vector3.prototype.zero = function() {
   this.y = 0;
   this.z = 0;
   return this;
+};
+
+/** This vector's x value
+ * @returns {number}
+ */
+Vector3.prototype.getX = function () {
+  return this.x;
+};
+/** This vector's y value
+ * @returns {number}
+ */
+Vector3.prototype.getY = function () {
+  return this.y;
+};
+/** This vector's z value
+ * @returns {number}
+ */
+Vector3.prototype.getZ = function () {
+  return this.z;
+};
+/** Whether or not this vector is equal to 0
+ * @returns {boolean}
+ */
+Vector3.prototype.isZero = function () {
+  return this.x || this.y || this.z;
 };
 
 /* - - - - - - - - - -
@@ -330,27 +327,76 @@ Vector3.prototype.scale = function (number) {
   return this;
 };
 
-/** This vector's x value
+/* - - - - - - - - - -
+  Rotations
+ - - - - - - - - - - */
+ /**
+ * Inverts this vector, then returns this vector.
+ * @returns {Vector3}
+ */
+Vector3.prototype.invert = function () {
+  this.x = -this.x;
+  this.y = -this.y;
+  this.z = -this.z;
+  return this;
+};
+
+/* - - - - - - - - - -
+  Other operations
+ - - - - - - - - - - */
+/**
+ * Returns the magnitude (length) of this vector.
  * @returns {number}
  */
-Vector3.prototype.getX = function () {
-  return this.x;
+Vector3.prototype.magnitude = function () {
+  return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
 };
-/** This vector's y value
+/**
+ * Returns the square of the magnitude (length) of this vector.
  * @returns {number}
  */
-Vector3.prototype.getY = function () {
-  return this.y;
+Vector3.prototype.sqMagnitude = function () {
+  return this.x * this.x + this.y * this.y + this.z * this.z;
 };
-/** This vector's z value
+/**
+ * Returns the dot product of this vector with another vector.
+ * @param {Vector3} vector 
  * @returns {number}
  */
-Vector3.prototype.getZ = function () {
-  return this.z;
+Vector3.prototype.dotProduct = function (vector) {
+  return (this.x * vector.x + this.y * vector.y + this.z * vector.z);
 };
-/** Whether or not this vector is equal to 0
- * @returns {boolean}
+/**
+ * returns the distance between 2 vectors
+ * @param {Vector3} vector 
+ * @returns {number}
  */
-Vector3.prototype.isZero = function () {
-  return this.x || this.y || this.z;
-}
+Vector3.prototype.distance = function (vector) {
+  return Math.sqrt((this.x-vector.x)*(this.x-vector.x) +
+  (this.y-vector.y)*(this.y-vector.y) +
+  (this.z-vector.z)*(this.z-vector.z));
+};
+/**
+ * returns the square of the distance between 2 vectors
+ * @param {Vector3} vector 
+ * @returns {number}
+ */
+Vector3.prototype.sqDistance = function (vector) {
+  return (this.x-vector.x)*(this.x-vector.x) +
+  (this.y-vector.y)*(this.y-vector.y) +
+  (this.z-vector.z)*(this.z-vector.z);
+};
+/**
+ * Shortens or lengthens this vector's length to 1, then returns this vector.
+ * @returns {Vector3}
+ */
+Vector3.prototype.normalize = function () {
+  let magnitude = this.magnitude();
+  if (magnitude != 0) { //We don't want to deal with NaN vectors
+    magnitude = 1 / magnitude; //not magnitude anymore.
+    this.x *= magnitude;
+    this.y *= magnitude;
+    this.z *= magnitude;
+  }
+  return this;
+};
