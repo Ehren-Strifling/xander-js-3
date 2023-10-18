@@ -6,7 +6,7 @@ function Input(element) {
   this.mouseY = 0;
   this.MouseDragX = 0;
   this.MouseDragY = 0;
-  this.mouseClicked = [5]; //mouse buttons pressed or held. 3 = pressed, 2 = held, 1 = released, 0 = none
+  this.mouseClicked = [0, 0, 0, 0, 0]; //mouse buttons pressed or held. 3 = pressed, 2 = held, 1 = released, 0 = none
   //I would like to get this next one working using an object but I need to be able to iterate through it easily.
   //iterating through 223 keys per input object annoys me a lot.
   this.keyMap = [223];//[223]; //keys pressed or held. 3 = pressed, 2 = held, 1 = released, 0 = none
@@ -67,6 +67,8 @@ Input.prototype.onMouseWheel = function (e) {
 Input.prototype.onKeyDown = function (e) {
   //e = e || event;
   this.keyMap[e.keyCode] = 3;
+
+  e.preventDefault(); //prevents spacebar from scrolling the screen and other weird things.
 };
 Input.prototype.onKeyUp = function (e) {
   //e = e || event;
