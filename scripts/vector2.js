@@ -14,7 +14,8 @@ function Vector2(x = 0, y = 0) {
  * Returns a copy of this vector.
  * @returns {Vector2}
  */
-Vector2.prototype.copy = Vector2.prototype.vectorCopy = function () {
+//Vector2.prototype.copy = 
+Vector2.prototype.vectorCopy = function () {
   return new Vector2(this.x, this.y);
 };
 /**
@@ -144,6 +145,28 @@ Vector2.prototype.perpendicularCC = function () {
   this.y = number;
   return this;
 };
+/**
+ * rotates this vector clockwise by t radians, then returns this vector
+ * @param {number} t 
+ * @returns {Vector2}
+ */
+Vector2.prototype.rotate = function (t) {
+  let copy = this.vectorCopy();
+  this.x = copy.x * Math.cos(t) + copy.y * Math.sin(t);
+  this.y = copy.x * -Math.sin(t) + copy.y * Math.cos(t);
+  return this;
+}
+/**
+ * rotates this vector clockwise by t radians, counterclockwise, then returns this vector
+ * @param {number} t 
+ * @returns {Vector2}
+ */
+Vector2.prototype.rotateCC = function (t) {
+  let copy = this.vectorCopy();
+  this.x = copy.x * Math.cos(t) + copy.y * -Math.sin(t);
+  this.y = copy.x * Math.sin(t) + copy.y * Math.cos(t);
+  return this;
+}
 
 
 /* - - - - - - - - - -
