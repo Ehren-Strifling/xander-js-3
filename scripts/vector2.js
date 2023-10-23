@@ -147,7 +147,7 @@ Vector2.prototype.perpendicularCC = function () {
 };
 /**
  * rotates this vector clockwise by t radians, then returns this vector
- * @param {number} t 
+ * @param {number} t angle to rotate this vector by (in radians)
  * @returns {Vector2}
  */
 Vector2.prototype.rotate = function (t) {
@@ -158,7 +158,7 @@ Vector2.prototype.rotate = function (t) {
 }
 /**
  * rotates this vector clockwise by t radians, counterclockwise, then returns this vector
- * @param {number} t 
+ * @param {number} t angle to rotate this vector by (in radians)
  * @returns {Vector2}
  */
 Vector2.prototype.rotateCC = function (t) {
