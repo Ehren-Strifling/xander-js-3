@@ -61,6 +61,24 @@ Vector2.prototype.getX = function () {
 Vector2.prototype.getY = function () {
   return this.y;
 };
+/**
+ * Sets this vector's x value
+ * @param {x} x 
+ * @returns {Vector2}
+ */
+Vector2.prototype.setX = function (x) {
+  this.x = x;
+  return this;
+}
+/**
+ * Sets this vector's y value
+ * @param {y} y 
+ * @returns {Vector2}
+ */
+Vector2.prototype.setY = function (y) {
+  this.y = y;
+  return this;
+}
 /** Whether or not this vector is equal to 0
  * @returns {boolean}
  */

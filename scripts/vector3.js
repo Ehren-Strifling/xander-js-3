@@ -72,6 +72,33 @@ Vector3.prototype.getY = function () {
 Vector3.prototype.getZ = function () {
   return this.z;
 };
+/**
+ * Sets this vector's x value
+ * @param {x} x 
+ * @returns {Vector3}
+ */
+Vector3.prototype.setX = function (x) {
+  this.x = x;
+  return this;
+}
+/**
+ * Sets this vector's y value
+ * @param {y} y 
+ * @returns {Vector3}
+ */
+Vector3.prototype.setY = function (y) {
+  this.y = y;
+  return this;
+}
+/**
+ * Sets this vector's y value
+ * @param {z} z 
+ * @returns {Vector3}
+ */
+Vector3.prototype.setZ = function (y) {
+  this.z = z;
+  return this;
+}
 /** Whether or not this vector is equal to 0
  * @returns {boolean}
  */
