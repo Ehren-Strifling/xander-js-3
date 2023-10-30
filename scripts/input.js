@@ -75,6 +75,10 @@ Input.prototype.onKeyUp = function (e) {
   this.keyMap[e.keyCode] = 1;
 };
 
+/**
+ * 
+ * @param {HTMLElement} element 
+ */
 Input.prototype.addListeners = function (element) {
   element.addEventListener('mousemove', (e) => this.trackMousePosition(e));
   element.addEventListener('mousedown', (e) => this.onMouseDown(e));
@@ -85,8 +89,10 @@ Input.prototype.addListeners = function (element) {
   element.addEventListener('contextmenu', (e) => { e.preventDefault();},false);
   
   //these functions need to be attached to the window... I think.
-  window.addEventListener('keydown', (e) => this.onKeyDown(e));
-  window.addEventListener('keyup', (e) => this.onKeyUp(e));
+  element.addEventListener('keydown', (e) => this.onKeyDown(e));
+  element.addEventListener('keyup', (e) => this.onKeyUp(e));
+
+  element.tabIndex = 0;
 }
 
 
