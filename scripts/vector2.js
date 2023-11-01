@@ -34,7 +34,7 @@ Vector2.prototype.setVector = function (v) {
  * @param {number} y 
  * @returns {Vector2}
  */
-Vector2.prototype.set = function (x, y) {
+Vector2.prototype.set = function (x = 0, y = 0) {
   this.x = x;
   this.y = y;
   return this;

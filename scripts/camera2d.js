@@ -1,54 +1,36 @@
 "use strict";
 //Ehren Strifling
 
+//Requires Vector2
+
 /**
  * Creates a 2d camera object.
  * 
- * DO NOT USE MEMBER VARIABLES
+ * DO NOT USE SCALE VARIABLE
  * @returns {Camera2d}
  */
 function Camera2d() {
   this.x = 0;
   this.y = 0;
+  this.w = 0;
+  this.h = 0;
+  this.hw = 0; //half width
+  this.hh = 0; //half height
 
-  this._hw = 0; //half width
-  this._hh = 0; //half height
+  this.canvasWidth = 0;
+  this.canvasHeight = 0;
+
+  this.canvasScaleX = 1;
+  this.canvasScaleY = 1;
 
   this._scale = 1;
 }
-Object.setPrototypeOf(Camera2d.prototype, Vector2.prototype);
-
+if (window.Vector2) {
+  Object.setPrototypeOf(Camera2d.prototype, Vector2.prototype);
+}
 /* - - - - - - - - - -
   Getters and Setters
  - - - - - - - - - - */
-/**
- * Sets this camera's x position.
- * @param {number} x
- */
-Camera2d.prototype.setX = function (x) {
-  this.x = x;
-};
-/**
- * Sets this camera's y position.
- * @param {number} x
- */
-Camera2d.prototype.setY = function (y) {
-  this.y = y;
-};
-/**
- * Gets this camera's x position.
- * @returns {number}
- */
-Camera2d.prototype.getX = function () {
-  return this.x;
-};
-/**
- * Gets this camera's y position.
- * @returns {number}
- */
-Camera2d.prototype.getY = function () {
-  return this.y;
-};
 
 /**
  * Sets this camera's scale factor.
@@ -72,29 +54,52 @@ Camera2d.prototype.getScale = function () {
  * @param {number} w 
  */
 Camera2d.prototype.setWidth = function (w) {
-  this._hw = w/2;
+  this.w = w;
+  this.hw = w/2;
+  this.updateCanvasScaleX();
 };
 /**
  * Gets this camera's width.
  * @returns {number}
  */
 Camera2d.prototype.getWidth = function () {
-  return this._hw * 2;
+  return this.w;
 };
 /**
  * Sets this camera's height. Should be set to the height of the canvas.
  * @param {number} w 
  */
 Camera2d.prototype.setHeight = function (h) {
-  this._hh = h/2;
+  this.h = h;
+  this.hh = h/2;
+  this.updateCanvasScaleY();
 };
 /**
  * Gets this camera's height.
  * @returns {number}
  */
-Camera2d.prototype.getHeight= function () {
-  return this._hh * 2;
+Camera2d.prototype.getHeight = function () {
+  return this.h;
 };
+
+Camera2d.prototype.setCanvasWidth = function (w) {
+  this.canvasWidth = w;
+  this.updateCanvasScaleX();
+}
+Camera2d.prototype.setCanvasHeight = function (h) {
+  this.canvasHeight = h;
+  this.updateCanvasScaleY();
+}
+Camera2d.prototype.updateCanvasScaleX = function () {
+  if (this.canvasWidth!==0) {
+    this.canvasScaleX = this.w / this.canvasWidth;
+  }
+}
+Camera2d.prototype.updateCanvasScaleY = function () {
+  if (this.canvasHeight!==0) {
+    this.canvasScaleY = this.h / this.canvasHeight;
+  }
+}
 
 /* - - - - - - - - - -
   Coordinate conversion functions
@@ -108,7 +113,7 @@ Camera2d.prototype.getHeight= function () {
  * @returns {number}
  */
 Camera2d.prototype.WtPX = function (x) {
-  return (x - this.x) * this._scale + this._hw;
+  return (x - this.x) * this._scale + this.hw;
 };
 /**
  * World to Point Y.
@@ -118,7 +123,7 @@ Camera2d.prototype.WtPX = function (x) {
  * @returns {number}
  */
 Camera2d.prototype.WtPY = function (y) {
-  return (y - this.y) * this._scale + this._hh;
+  return (y - this.y) * this._scale + this.hh;
 };
 /**
  * Multiplies a number by this camera's scale value.
@@ -138,7 +143,7 @@ Camera2d.prototype.scale = function (number) {
  * @returns {number}
  */
 Camera2d.prototype.PtWX = function (x) {
-  return (x - this._hw) / this._scale + this.x;
+  return (x - this.hw) / this._scale + this.x;
 };
 /**
  * Point to World Y.
@@ -149,7 +154,7 @@ Camera2d.prototype.PtWX = function (x) {
  * @returns {number}
  */
 Camera2d.prototype.PtWY = function (y) {
-  return (y - this._hh) / this._scale + this.y;
+  return (y - this.hh) / this._scale + this.y;
 };
 
  /* - - - - - - - - - -
@@ -166,8 +171,8 @@ Camera2d.prototype.PtWY = function (y) {
 */
 Camera2d.prototype.fillRect = function (ctx, x, y, width, height) {
   ctx.fillRect(
-    (x - this.x) * this._scale + this._hw,
-    (y - this.y) * this._scale + this._hh,
+    (x - this.x) * this._scale + this.hw,
+    (y - this.y) * this._scale + this.hh,
     width * this._scale,
     height * this._scale
   );
@@ -182,8 +187,8 @@ Camera2d.prototype.fillRect = function (ctx, x, y, width, height) {
 */
 Camera2d.prototype.strokeRect = function (ctx, x, y, width, height) {
   ctx.strokeRect(
-    (x - this.x) * this._scale + this._hw,
-    (y - this.y) * this._scale + this._hh,
+    (x - this.x) * this._scale + this.hw,
+    (y - this.y) * this._scale + this.hh,
     width * this._scale,
     height * this._scale
   );
@@ -200,8 +205,8 @@ Camera2d.prototype.strokeRect = function (ctx, x, y, width, height) {
 */
 Camera2d.prototype.circle = function (ctx, x, y, radius, start = 0, end = Math.PI * 2) {
   ctx.arc( //inlined code because I don't think browsers do that. Some scripts might call draw code every frame so decent performance is important.
-    (x - this.x) * this._scale + this._hw,
-    (y - this.y) * this._scale + this._hh,
+    (x - this.x) * this._scale + this.hw,
+    (y - this.y) * this._scale + this.hh,
     radius * this._scale,
     start,
     end
@@ -213,7 +218,7 @@ Camera2d.prototype.circle = function (ctx, x, y, radius, start = 0, end = Math.P
  * @param {CanvasRenderingContext2D} ctx
  */
 Camera2d.prototype.clear = function (ctx) {
-  ctx.clearRect(0, 0, this._hw*2, this._hh*2);
+  ctx.clearRect(0, 0, this.w, this.h);
 };
 
 /**
@@ -227,8 +232,8 @@ Camera2d.prototype.clear = function (ctx) {
 Camera2d.prototype.fillText = function (ctx, text, x, y, maxWidth = undefined) {
   ctx.fillText(
     text,
-    (x - this.x) * this._scale + this._hw,
-    (y - this.y) * this._scale + this._hh,
+    (x - this.x) * this._scale + this.hw,
+    (y - this.y) * this._scale + this.hh,
     maxWidth
   );
 };
