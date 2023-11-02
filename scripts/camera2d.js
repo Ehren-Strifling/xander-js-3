@@ -1,7 +1,7 @@
 "use strict";
 //Ehren Strifling
 
-//Requires Vector2
+//Vector2 Recommended
 
 /**
  * Creates a 2d camera object.
@@ -156,6 +156,35 @@ Camera2d.prototype.PtWX = function (x) {
 Camera2d.prototype.PtWY = function (y) {
   return (y - this.hh) / this._scale + this.y;
 };
+
+if (window.Vector2) {
+  /**
+ * Vector World to Point.
+ * 
+ * Takes an Vector and converts it from a point in world to a point on the canvas. 
+ * Changes the original vector and returns it.
+ * @param {Vector2} v
+ * @returns {Vector2}
+ */
+  Camera2d.prototype.vWtP = function (v) {
+    v.x = (v.x - this.x) * this._scale + this.hw;
+    v.y = (v.y - this.y) * this._scale + this.hh;
+    return v;
+  }
+  /**
+ * Vector Point to World .
+ * 
+ * takes a vector and converts it from a point on the canvas to a point in world.
+ * Changes the original vector and returns it.
+ * @param {Vector2} v
+ * @returns {Vector2}
+ */
+Camera2d.prototype.vPtW = function (v) {
+  v.x = (v.x - this.hw) / this._scale + this.x;
+  v.y = (v.y - this.hh) / this._scale + this.y;
+  return v;
+}
+}
 
  /* - - - - - - - - - -
   Drawing Functions
