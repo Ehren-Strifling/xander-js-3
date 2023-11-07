@@ -383,3 +383,110 @@ class InputV2MouseManager {
   getMouseWheel() {return [3];}
   reset() {};
 }
+
+
+
+"use strict";
+
+class DefaultKeyboardManager extends InputV2KeyboardManager {
+  constructor() {
+    super();
+    this.keyMap = [223];//[223]; //keys pressed or held. 3 = pressed, 2 = held, 1 = released, 0 = none
+    this.keyMap.fill(0);
+  }
+  /**
+   * 
+   * @param {Event} e 
+   * @param {InputV2Controller} controller 
+   */
+  onKeyDown(e, controller) {
+    if (e.keyCode) {
+      this.keyMap[e.keyCode] = 3;
+    }
+    e.preventDefault(); //prevents spacebar from scrolling the screen and other weird things.
+  }
+  /**
+   * 
+   * @param {Event} e 
+   * @param {InputV2Controller} controller 
+   */
+  onKeyUp(e, controller) {
+    if (e.keyCode) {
+      this.keyMap[e.keyCode] = 1;
+    }
+  }
+
+  key(keyCode) {
+    return this.keyMap[keyCode];
+  }
+  reset() {
+    for (let i=0;i<this.keyMap.length;++i) {
+      this.keyMap[i]&=2;
+    }
+  }
+}
+class DefaultMouseManager extends InputV2MouseManager {
+  constructor() {
+    super();
+
+    this.camera = new Camera2d;
+
+    this.mousePos = new Vector2();
+    this.mouseDrag = new Vector2();
+    this.mouseButtons = [5];
+    this.mouseButtons.fill(0);
+    this.mouseWheel = [3];
+    this.mouseWheel.fill(0);
+  }
+  /**
+   * @param {Event} e 
+   * @param {InputV2Controller} controller 
+   */
+  onMouseMove(e, controller) {
+    this.mouseDrag.x += this.mousePos.x - e.offsetX;
+    this.mouseDrag.y += this.mousePos.y - e.offsetY;
+    this.mousePos.x = e.offsetX;
+    this.mousePos.y = e.offsetY;
+  }
+  /**
+   * @param {Event} e 
+   * @param {InputV2Controller} controller 
+   */
+  onMouseDown(e, controller) {
+    this.mouseButtons[e.button] = 3;
+  }
+  /**
+   * @param {Event} e 
+   * @param {InputV2Controller} controller 
+   */
+  onMouseUp(e, controller) {
+    this.mouseButtons[e.button] = 1;
+  }
+  /**
+   * @param {Event} e 
+   * @param {InputV2Controller} controller 
+   */
+  onMouseWheel(e, controller) {
+    this.mouseWheel[0] = e.deltaX;
+    this.mouseWheel[1] = e.deltaY;
+    this.mouseWheel[2] = e.deltaZ; 
+  }
+
+  getMousePos() {
+    return this.mousePos;
+  }
+  getMouseDrag() {
+    return this.mouseDrag;
+  }
+  getMouseButtons() {
+    return this.mouseButtons;
+  }
+  getMouseWheel() {
+    return this.mouseWheel;
+  }
+  reset() {
+    for (let i=0;i<this.mouseButtons.length;++i) {
+      this.mouseButtons[i]&=2;
+    }
+  };
+}
