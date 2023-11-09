@@ -451,6 +451,14 @@ class InputV2MouseManager {
   getMouseWheel() {return [3];}
   reset() {};
 }
+/** @abstract */
+class InputV2GamepadManager {
+  /**
+   * @param {Gamepad} gamepad 
+   * @param {InputV2} controller 
+   */
+  update(gamepad, controller) {}
+}
 
 
 
@@ -559,8 +567,9 @@ class DefaultMouseManager extends InputV2MouseManager {
   };
 }
 
-class InputV2GamepadManager {
+class DefaultGamepadManager extends InputV2GamepadManager {
   constructor() {
+    super();
     this.lastUpdated = 0;
   }
   /**
